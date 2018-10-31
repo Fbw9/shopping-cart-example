@@ -5,7 +5,7 @@ class Pro extends React.Component {
         return (
           <div className="text-center">
                 Pro Component
-                <button>Back</button>
+                <button onClick={this.props.onReset}>Back</button>
           </div>
         );
       }

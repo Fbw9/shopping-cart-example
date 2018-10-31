@@ -1,7 +1,6 @@
 import React from "react";
 import Pro from "../signup/Pro";
 import Trial from "../signup/Trial";
-import { Switch, Link, Route } from "react-router-dom";
 
 class Signup extends React.Component {
     constructor(props) {
@@ -12,13 +11,17 @@ class Signup extends React.Component {
         }
     }
 
+    resetSignupType = () => {
+        this.setState({signupType:null});
+    }
+
     render() {
         if (this.state.signupType === 'trial') {
-            return (<Trial/>);
+            return (<Trial onReset={this.resetSignupType}/>);
         }
 
         if (this.state.signupType === 'pro') {
-            return (<Pro/>);
+            return (<Pro onReset={this.resetSignupType}/>);
         }
 
         return (
