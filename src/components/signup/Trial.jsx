@@ -1,16 +1,17 @@
 import React from "react";
 import ErrorMessage from "../shared/ErrorMessage";
+import LoadingOverlay from "../shared/LoadingOverlay";
 
 class Trial extends React.Component {
     constructor(props) {
         super(props);
 
         this.state = {
-            disabled: true,
-            email: '',
-            password: '',
-            password_again: '',
+            email: 'aaa@aaa.de',
+            password: '123456?8',
+            password_again: '123456?8',
             errors: '',
+            loading: false,
         }
         this.inputChanged = this.inputChanged.bind(this);
     }
@@ -22,7 +23,7 @@ class Trial extends React.Component {
     }
 
     checkValid = () =>  {
-        let disabled = true;
+        let valid = false;
         let errors = '';
         let errorMessages = {
             email: 'Invalid email address.',
@@ -46,21 +47,78 @@ class Trial extends React.Component {
             this.state.password === this.state.password_again
         ) {
             passed.password = true;
+        } else {
+            errors += errorMessages.password;
         }
 
         if (passed.email && passed.password) {
-            disabled = false;
+            valid = true;
         }
 
         this.setState({
-            disabled: disabled,
             errors: errors
         });
+
+        return valid;
+    }
+
+    submitDataWithGetRequest = () => {
+        let params = 
+        'email=' + encodeURIComponent(this.state.email) +
+        '&password=' + encodeURIComponent(this.state.password) + 
+        '&password_again=' + encodeURIComponent(this.state.password_again);
+        let url = 'https://jsonplaceholder.typicode.com/todos/1?' + params;
+
+        fetch(url)
+        .then(response => response.json())
+        .then(json => {
+            this.processResponse(json);
+        });
+    }
+
+    submitDataWithPostRequest = () => {
+        fetch('https://jsonplaceholder.typicode.com/posts', {
+            method: 'post',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                email: this.state.email,
+                password: this.state.password,
+                password_again: this.state.password_again
+            })
+        })
+        .then(response => response.json())
+        .then(json => {
+            this.processResponse(json);
+        });
+    }
+
+    processResponse = (json) => {
+        if (json.hasOwnProperty('id')) {
+            // Success
+            document.location.reload();
+        } else {
+            this.setState({
+                loading: false,
+                errors: 'Internal Server Error'
+            });
+        }
+    }
+
+    submitData = () => {
+        if (this.checkValid()) {
+            this.setState({loading: true});
+            //this.submitDataWithGetRequest();
+            this.submitDataWithPostRequest();
+        }
     }
 
     render() {
         return (
           <div className="text-center">
+            {this.state.loading && <LoadingOverlay/>}
                 Submit for Trial
                 <br/>
                 {this.state.errors && <ErrorMessage message={this.state.errors}/>}
@@ -71,7 +129,6 @@ class Trial extends React.Component {
                         type="text" 
                         name="email" 
                         value={this.state.email} 
-                        onBlur={this.checkValid}
                         onChange={this.inputChanged}
                     />
                 </div>
@@ -95,7 +152,7 @@ class Trial extends React.Component {
                 </div>
                 <br/>
                 <button onClick={this.props.onReset}>Back</button>
-                <button disabled={this.state.disabled}>Submit</button>
+                <button onClick={this.submitData}>Submit</button>
                 
           </div>
         );
