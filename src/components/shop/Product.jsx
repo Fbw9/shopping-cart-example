@@ -11,7 +11,7 @@ class Product extends React.Component {
 
     addToShoppingCard = (product) => {
         this.props.onAddingToShoppingCart(product, this.state.amount);
-    }
+    };
 
     handleChange(e) {
         this.setState({ amount: parseInt(e.target.value, 10) });

@@ -37,7 +37,7 @@ class ShoppingCart extends React.Component {
             totalPrice = totalPrice + this.calculatePrice(
                 this.props.items[id].product.price,
                 this.props.items[id].amount
-            )
+            );
 
             return id;
         });
@@ -47,7 +47,7 @@ class ShoppingCart extends React.Component {
             totalItems: totalItems,
             totalPrice: totalPrice.toFixed(2),
         });
-    }
+    };
 
     priceCaption = (item, amount) => {
         if (typeof amount !== 'number') {
@@ -58,7 +58,7 @@ class ShoppingCart extends React.Component {
             ${this.state.currency}
             ${this.calculatePrice(item.price, amount).toFixed(2)}
         `;
-    }
+    };
 
     calculatePrice = (price, amount) => {
         if (typeof amount !== 'number') {
@@ -73,7 +73,7 @@ class ShoppingCart extends React.Component {
         }
 
         return price;
-    }
+    };
 
     changeCurrency = (obj) => {
         if (typeof obj !== 'object') {
@@ -96,7 +96,7 @@ class ShoppingCart extends React.Component {
         }, () => {
             this.calculateSummary();
         });
-    }
+    };
 
     isValidValue = (obj, key, type) => {
         if (obj.hasOwnProperty(key) && typeof obj[key] === type) {
@@ -104,12 +104,18 @@ class ShoppingCart extends React.Component {
         }
 
         return false;
-    }
+    };
 
     changeAmount(id, e) {
         this.props.onProductAmountChanged(id, e.target.value);
     }
-
+    /////////////////////////////////////////////////
+    //    Example                                  //
+    // removeProduct = (id) => {                   //
+    //     console.log("hi", id)                   //
+    //     this.props.onProductAmountChanged(id, 0)//
+    // };                                          //
+    /////////////////////////////////////////////////
     render() {
         return (
             <div style={{backgroundColor: '#ffffff', padding: '20px'}}>
@@ -139,6 +145,7 @@ class ShoppingCart extends React.Component {
                             <td style={{whiteSpace:'nowrap'}}>{this.priceCaption(item.product, 1)}</td>
                             <td>=</td>
                             <td style={{whiteSpace:'nowrap'}}>{this.priceCaption(item.product, item.amount)}</td>
+                            <td><button onClick={() => {this.props.onProductAmountChanged(item.product.id, 0)}}>Remove</button></td>
                         </tr>
                     ))}
                     </tbody>

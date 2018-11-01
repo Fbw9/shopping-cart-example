@@ -4,7 +4,7 @@ import Product from '../shop/Product';
 class ProductList extends React.Component {
     addToShoppingCard = (product, amount) => {
         this.props.onProductSelectedForShoppingCard(product, amount);
-    }
+    };
 
     render() {
         return (
