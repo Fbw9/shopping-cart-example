@@ -13,8 +13,9 @@ class Product extends React.Component {
         this.props.onAddingToShoppingCart(product, this.state.amount);
     }
 
-    handleChange(e) {
-        this.setState({ amount: parseInt(e.target.value, 10) });
+    handleChange(id, e) {
+        console.log(id, e.target.value);
+        //this.setState({ amount: parseInt(e.target.value, 10) });
     }
 
     render() {
@@ -26,12 +27,13 @@ class Product extends React.Component {
                 </td>
                 <td>x</td>
                 <td style={{whiteSpace:'nowrap'}}>
+                    --{this.props.product.id}--
                     <input
                         type="number"
                         style={{width:'40px'}}
                         placeholder="1"
                         value={this.state.amount} 
-                        onChange={ this.handleChange.bind(this) } 
+                        onChange={ this.handleChange.bind(this, this.props.product.id) } 
                     />
                     <button onClick={() => { this.addToShoppingCard(this.props.product) }}>
                         + to cart
